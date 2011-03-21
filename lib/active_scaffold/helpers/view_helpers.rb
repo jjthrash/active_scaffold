@@ -150,7 +150,7 @@ module ActiveScaffold
         url_options[:action] = link.action
         # TIMCO see: http://groups.google.com/group/activescaffold/browse_thread/thread/bf72f4c726c818a8/080b25624910863b?#080b25624910863b
         if link.parameters and link.parameters.has_key? :override_id_field
-          url_options[link.parameters.delete(:override_id_field)] =
+          url_options[link.parameters[:override_id_field]] =
             url_options[:id]
           url_options.delete(:id)
         end
@@ -158,6 +158,10 @@ module ActiveScaffold
         url_options[:controller] = link.controller if link.controller
         url_options.delete(:search) if link.controller and link.controller.to_s != params[:controller]
         url_options.merge! link.parameters if link.parameters
+
+        # TIMCO
+        url_options.delete(:override_id_field)
+        # END TIMCO
         @link_record = record
         url_options.merge! self.instance_eval(&(link.dynamic_parameters)) if link.dynamic_parameters.is_a?(Proc)
         @link_record = nil
